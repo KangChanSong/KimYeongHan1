@@ -1,9 +1,11 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,7 @@ public class Member {
 
     @Embedded
     private Address address;
-
+    
     //읽기전용. 매핑될 거울일 뿐이라는 것을 명시
     @OneToMany(mappedBy = "member")
     //컬렉션은 하이버네이트가 내부적으로 별도의 클래스로 감싼다.
