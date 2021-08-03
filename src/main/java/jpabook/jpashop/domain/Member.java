@@ -22,6 +22,9 @@ public class Member {
     @Embedded
     private Address address;
     
+    //양방향 연관관계에서는 하나를 JsonIgnore 해줘야함
+    //안그러면 무한루프돔
+    @JsonIgnore
     //읽기전용. 매핑될 거울일 뿐이라는 것을 명시
     @OneToMany(mappedBy = "member")
     //컬렉션은 하이버네이트가 내부적으로 별도의 클래스로 감싼다.
