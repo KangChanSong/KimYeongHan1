@@ -2,6 +2,7 @@ package jpabook.jpashop.repository;
 
 import jpabook.jpashop.domain.Order;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -12,13 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class OrderRepository {
 
     private final EntityManager em;
-
-    public OrderRepository(EntityManager em) {
-        this.em = em;
-    }
 
     public void save(Order order) {
         em.persist(order);
@@ -95,7 +93,25 @@ public class OrderRepository {
         TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000);
         return query.getResultList();
     }
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery(
+                "select o from Order o " +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+                        )
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
 
-
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+                //1 대 N 페치 조인시 페이징 불가능
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item", Order.class).getResultList();
+    }
 }
 
